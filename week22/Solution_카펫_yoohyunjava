@@ -1,0 +1,16 @@
+class Solution {
+    public int[] solution(int brown, int yellow) {
+        return solve(brown, yellow);
+    }
+    int[] solve(int brown, int yellow){
+        int tmp;
+        for(int height = 3;; height++){
+            tmp = height * 2;
+            for(int width = 3; brown >= tmp + (width - 2) * 2; width++){
+                if(yellow == (height - 2) * (width - 2)){
+                    return new int[]{width, height};
+                }
+            }
+        }
+    }
+}
