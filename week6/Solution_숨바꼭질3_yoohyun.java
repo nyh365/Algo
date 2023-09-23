@@ -1,53 +1,53 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
-	public static void main(String args[]) throws Exception{
+	static final int MAX = 100000;
+	public static void main(String args[]) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(st.nextToken());
-		int K = Integer.parseInt(st.nextToken());
-		Queue<Integer> queue1 = new LinkedList<>();
-		Queue<Integer> queue2 = new LinkedList<>();
-		int result[] = new int[200001];
-		boolean check[] = new boolean[200001];
-		result[N] = 0;
-		check[N] = true;
-		queue1.add(N);
-		while(!queue1.isEmpty()) {
-			int cur = queue1.remove();
-			if(cur * 2 < 200001) {
-				if(!check[cur * 2]) {
-					queue1.add(cur * 2);
-					check[cur * 2] = true;
-					result[cur * 2] = result[cur];
-				}
+		
+		int n = Integer.parseInt(st.nextToken());
+		int k = Integer.parseInt(st.nextToken());
+		int answer = 0;
+		
+		boolean[] visited = new boolean[MAX + 1];
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> Integer.compare(a[1], b[1]));
+		pq.add(new int[] {n, 0});
+		
+		int[] tmp;
+		while(!pq.isEmpty()) {
+			tmp = pq.remove();
+			
+			if(visited[tmp[0]]) continue;
+			visited[tmp[0]] = true;
+			
+			if(tmp[0] == k) {
+				answer = tmp[1];
+				break;
 			}
-			if(cur + 1 < 200001) {
-				if(!check[cur + 1]) {
-					queue2.add(cur + 1);
-					check[cur + 1] = true;
-					result[cur + 1] = result[cur] + 1;
-				}
-			}
-			if(cur - 1 >= 0) {
-				if(!check[cur - 1]) {
-					queue2.add(cur - 1);
-					check[cur - 1] = true;
-					result[cur - 1] = result[cur] + 1;
+			
+			if(tmp[0] - 1 >= 0) {
+				if(!visited[tmp[0] - 1]) {
+					pq.add(new int[] {tmp[0] - 1, tmp[1] + 1});
 				}
 			}
 			
-			if(queue1.isEmpty()) {
-				while(!queue2.isEmpty()) {
-					queue1.add(queue2.remove());
+			if(tmp[0] + 1 <= MAX) {
+				if(!visited[tmp[0] + 1]) {
+					pq.add(new int[] {tmp[0] + 1, tmp[1] + 1});
+				}
+			}
+			
+			if(tmp[0] * 2 <= MAX) {
+				if(!visited[tmp[0] * 2]) {
+					pq.add(new int[] {tmp[0] * 2, tmp[1]});
 				}
 			}
 		}
-		
-		System.out.print(result[K]);
-	}
+		System.out.print(answer);
+    }
 }
