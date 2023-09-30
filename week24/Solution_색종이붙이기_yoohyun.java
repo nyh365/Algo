@@ -6,12 +6,13 @@ import java.util.StringTokenizer;
 
 public class Main {
 	static int[] capacity = new int[6];
+	static boolean[][] visited = new boolean[10][10];
 	static int result;
 	public static void main(String args[]) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		
-		boolean[][] visited = new boolean[10][10];
+		
 		for(int i = 0; i < 10; i++) {
 			st = new StringTokenizer(br.readLine());
 			for(int j = 0; j < 10; j++) {
@@ -22,33 +23,31 @@ public class Main {
 		Arrays.fill(capacity, 5);
 		
 		result = Integer.MAX_VALUE;
-		dfs(0,0, visited);
+		dfs(0,0);
 		
 		System.out.print(result == Integer.MAX_VALUE ? -1 : result);
 	}
-	public static void dfs(int x, int y, boolean[][] visited) {
-		if(isOver(visited)) {
+	public static void dfs(int x, int y) {
+		if(isOver()) {
 			result = Math.min(result, total());
 			return;
 		}
 		
-		boolean[][] tmp = copy(visited);
 		int j = x;
 		for(int i = y; i < 10; i++) {
 			for(; j < 10; j++) {
-				if(!tmp[i][j]) continue;
+				if(!visited[i][j]) continue;
 				
 				for(int k = 5; k >= 1; k--) {
 					if(capacity[k] < 1) continue;
-					if(!isOK(tmp, j, i, k)) continue;
+					if(!isOK(j, i, k)) continue;
 					capacity[k]--;
-					attachPaper(tmp, j, i, k);
-					dfs(j + k, i, tmp);
+					attachPaper(j, i, k);
+					dfs(j + k, i);
 					
 					capacity[k]++;
-					detachPaper(tmp, j, i, k);
+					detachPaper(j, i, k);
 				}
-				
 				return;
 			}
 			j = 0;
@@ -61,44 +60,34 @@ public class Main {
 		}
 		return total;
 	}
-	public static boolean isOver(boolean[][] tmp) {
+	public static boolean isOver() {
 		for(int i = 0; i < 10; i++) {
 			for(int j = 0; j < 10; j++) {
-				if(tmp[i][j]) return false;
+				if(visited[i][j]) return false;
 			}
 		}
 		return true;
 	}
-	public static boolean[][] copy(boolean[][] visited){
-		boolean[][] newVisited = new boolean[10][10];
-		
-		for(int i = 0; i < 10; i++) {
-			for(int j = 0; j < 10; j++) {
-				newVisited[i][j] = visited[i][j];
-			}
-		}
-		return newVisited;
-	}
-	public static boolean isOK(boolean[][] tmp, int x, int y, int length) {
+	public static boolean isOK(int x, int y, int length) {
 		for(int i = y; i < y + length; i++) {
 			for(int j = x; j < x + length; j++) {
 				if(i < 0 || i > 9 || j < 0 || j > 9) return false;
-				if(!tmp[i][j]) return false;
+				if(!visited[i][j]) return false;
 			}
 		}
 		return true;
 	}
-	public static void attachPaper(boolean[][] tmp, int x, int y, int length) {
+	public static void attachPaper(int x, int y, int length) {
 		for(int i = y; i < y + length; i++) {
 			for(int j = x; j < x + length; j++) {
-				tmp[i][j] = false;
+				visited[i][j] = false;
 			}
 		}
 	}
-	public static void detachPaper(boolean[][] tmp, int x, int y, int length) {
+	public static void detachPaper(int x, int y, int length) {
 		for(int i = y; i < y + length; i++) {
 			for(int j = x; j < x + length; j++) {
-				tmp[i][j] = true;
+				visited[i][j] = true;
 			}
 		}
 	}
