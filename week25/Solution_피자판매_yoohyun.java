@@ -35,68 +35,39 @@ public class Main {
 		}
 		
 		//map을 이용한 모든 누적합 구하기
-		ArrayList<int[]> listA = makeSum(pizzaA, totalA);
-		ArrayList<int[]> listB = makeSum(pizzaB, totalB);
+		int[] dpA = makeSum(pizzaA, totalA);
+		int[] dpB = makeSum(pizzaB, totalB);
 		
-		solve(listA, listB);
+		solve(dpA, dpB);
 		
 		System.out.print(result);
 	}
 	
-	public static ArrayList<int[]> makeSum(int[] pizza, int total){
-		HashMap<Integer, Integer> map = new HashMap<>();
+	public static int[] makeSum(int[] pizza, int total){
+		int[] dp = new int[N + 1];
+		
 		int size = pizza.length;
 		int sum = 0;
 		for(int i = 0; i < size; i++) {
 			sum = 0;
 			for(int j = 0; j < size - 1; j++) {
 				sum += pizza[(i + j) % size];
-				map.put(sum, map.getOrDefault(sum, 0) + 1);
+				if(sum > N) continue;
+				dp[sum]++;
 			}
 		}
 		
-		map.put(total, map.getOrDefault(total, 0) + 1);
-		map.put(0, map.getOrDefault(0, 0) + 1);
-		ArrayList<int[]> list = new ArrayList<>();
+		dp[0]++;
+		if(total <= N) dp[total]++;
 		
-		for(int key : map.keySet()) {
-			list.add(new int[] {key, map.get(key)});
-		}
-		
-		return list;
+		return dp;
 	}
 	
-	public static void solve(ArrayList<int[]> listA, ArrayList<int[]> listB) {
-		Collections.sort(listB, (a, b) -> Integer.compare(a[0], b[0]));
+	public static void solve(int[] dpA, int[] dpB) {
+		int size = dpA.length;
 		
-		int size = listA.size();
-		
-		int target;
 		for(int i = 0; i < size; i++) {
-			target = binarySearch(listB, N - listA.get(i)[0]);
-			if(target == -1) continue;
-			result += listA.get(i)[1] * listB.get(target)[1];
+			result += dpA[i] * dpB[N - i];
 		}
-	}
-	
-	public static int binarySearch(ArrayList<int[]> listB, int target) {
-		int start = 0; 
-		int end = listB.size() - 1;
-		int result = -1;
-		int mid;
-		int tmp;
-		while(start <= end) {
-			mid = (start + end) / 2;
-			tmp = listB.get(mid)[0];
-			if(target == tmp) {
-				result = mid;
-				break;
-			} else if(target < tmp) {
-				end = mid - 1;
-			} else {
-				start = mid + 1;
-			}
-		}
-		return result;
 	}
 }
