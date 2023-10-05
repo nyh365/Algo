@@ -1,4 +1,5 @@
 import java.util.*;
+
 class Solution {
     public ArrayList<Integer> solution(String s) {
         ArrayList<Integer> result = new ArrayList<>();
