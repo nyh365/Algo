@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
  
@@ -22,22 +23,21 @@ public class Main{
         
         int N = Integer.parseInt(br.readLine());
         boolean[] visited = new boolean[10001];
-
-        PriorityQueue<Lecture> lectures = new PriorityQueue<>();
+        Lecture[] lectures = new Lecture[N];
         
         for(int i = 0; i < N; i++) {
         	st = new StringTokenizer(br.readLine());
-        	lectures.add(new Lecture(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
+        	lectures[i] = new Lecture(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
         }
         
+        Arrays.sort(lectures);
+        
         int total = 0;
-        while(!lectures.isEmpty()) {
-        	Lecture cur = lectures.remove();
-        	
-        	for(int i = cur.day; i >= 1; i--) {
-        		if(!visited[i]) {
-        			total += cur.cost;
-        			visited[i] = true;
+        for(int i = 0; i < N; i++) {
+        	for(int j = lectures[i].day; j >= 1; j--) {
+        		if(!visited[j]) {
+        			total += lectures[i].cost;
+        			visited[j] = true;
         			break;
         		}
         	}
