@@ -30,16 +30,10 @@ public class Main{
         st = new StringTokenizer(br.readLine());
         int town = Integer.parseInt(st.nextToken());
         int curFuel = Integer.parseInt(st.nextToken());
-        boolean visitedTown = false;
         int result = 0, curLoc = 0;
         
         PriorityQueue<GasStation> descFuel = new PriorityQueue<>((a,b) -> Integer.compare(b.fuel, a.fuel));
-        while(!visitedTown) {
-        	if(curLoc + curFuel >= town) {
-        		visitedTown = true;
-        		break;
-        	}
-        	
+        while(curLoc + curFuel < town) {
         	while(!ascDis.isEmpty()) {
         		if(ascDis.peek().dis > curLoc + curFuel) break;
         		descFuel.add(ascDis.remove());
@@ -54,6 +48,6 @@ public class Main{
         	}
         }
         
-        System.out.print(visitedTown ? result : -1);
+        System.out.print(curLoc + curFuel >= town ? result : -1);
     }
 }
