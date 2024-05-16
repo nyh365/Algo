@@ -42,16 +42,11 @@ public class Main{
         for(int i = 0; i < N; i++) {
         	if(i == 0 || gifticons[i].expectedUseDate != gifticons[i - 1].expectedUseDate) {
         		preMaxExpireDate = curExpectedUseDate;
-        		temp = Math.max(preMaxExpireDate, gifticons[i].expectedUseDate);
-        		extensionCnt = gifticons[i].expire >= temp ? 0 :  (temp - gifticons[i].expire - 1) / 30 + 1;
-        		result += extensionCnt;
-        		curExpectedUseDate = gifticons[i].expire + 30 * extensionCnt;
-        	} else {
-        		temp = Math.max(preMaxExpireDate, gifticons[i].expectedUseDate);
-        		extensionCnt = gifticons[i].expire >= temp ? 0 :  (temp - gifticons[i].expire - 1) / 30 + 1;
-        		result += extensionCnt;
-        		curExpectedUseDate = Math.max(curExpectedUseDate, gifticons[i].expire + 30 * extensionCnt);
-        	}
+        	} 
+        	temp = Math.max(preMaxExpireDate, gifticons[i].expectedUseDate);
+        	extensionCnt = gifticons[i].expire >= temp ? 0 :  (temp - gifticons[i].expire - 1) / 30 + 1;
+        	result += extensionCnt;
+        	curExpectedUseDate = Math.max(curExpectedUseDate, gifticons[i].expire + 30 * extensionCnt);
         }
         System.out.print(result);
     }
