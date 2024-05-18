@@ -8,6 +8,8 @@ import java.util.StringTokenizer;
 public class Main{
 	static int[] dx = {0, 1, 0, -1};
 	static int[] dy = {-1, 0, 1 ,0};
+	static int[][] room;
+	static int result;
 	public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -15,14 +17,12 @@ public class Main{
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
         
-        Queue<int[]> robot = new LinkedList<>();
         st = new StringTokenizer(br.readLine());
         int robotY = Integer.parseInt(st.nextToken());
         int robotX = Integer.parseInt(st.nextToken());
         int robotDir = Integer.parseInt(st.nextToken());
-        robot.add(new int[] {robotX, robotY, robotDir});
 
-        int[][] room = new int[N][M];
+        room = new int[N][M];
         for(int i = 0; i < N; i++) {
         	st = new StringTokenizer(br.readLine());
         	for(int j = 0; j < M; j++) {
@@ -30,49 +30,50 @@ public class Main{
         	}
         }
         
-        int[] cur;
-        int xx, yy;
-        int result = 0;
-        boolean needClean;
-        while(!robot.isEmpty()) {
-        	cur = robot.remove();
-        	
-        	//1번
-        	if(room[cur[1]][cur[0]] == 0) {
-        		result++;
-        		room[cur[1]][cur[0]] = -1;
-        	}
-        	
-        	//2번, 3번 조건 확인
-        	needClean = false;
-        	for(int k = 0; k < 4; k++) {
-        		xx = cur[0] + dx[k];
-        		yy = cur[1] + dy[k];
-        		
-        		if(room[yy][xx] == 0) {
-        			needClean = true; 
-        			break;
-        		}
-        	}
-        	
-        	//3번
-        	if(needClean) {
-        		while(true) {
-        			cur[2] = (cur[2] + 3) % 4;
-        			xx = cur[0] + dx[cur[2]];
-        			yy = cur[1] + dy[cur[2]];
-        			if(room[yy][xx] == 0) {
-        				robot.add(new int[] {xx, yy, cur[2]});
-        				break;
-        			}
-        		}
-        	} else { //2번
-        		xx = cur[0] + dx[(cur[2] + 2) % 4];
-        		yy = cur[1] + dy[(cur[2] + 2) % 4];
-        		if(room[yy][xx] == 1) break;
-        		robot.add(new int[] {xx, yy, cur[2]});
-        	}
-        }
+        solve(robotX, robotY, robotDir);
+	    
         System.out.print(result);
     }
+	public static void solve(int robotX, int robotY, int robotDir) {
+		//1번
+    	if(room[robotY][robotX] == 0) {
+    		result++;
+    		room[robotY][robotX] = -1;
+    	}
+    	
+    	//2번, 3번 조건 확인
+    	boolean needClean = needClean(robotX, robotY, robotDir);
+    	
+    	int xx, yy;
+    	if(needClean) {
+    		while(true) {
+    			robotDir = (robotDir + 3) % 4;
+    			xx = robotX + dx[robotDir];
+    			yy = robotY + dy[robotDir];
+    			if(room[yy][xx] == 0) {
+    				break;
+    			}
+    		}
+    	} else { //2번
+    		xx = robotX + dx[(robotDir + 2) % 4];
+    		yy = robotY + dy[(robotDir + 2) % 4];
+    	}
+    	if(room[yy][xx] != 1) {
+    		solve(xx, yy, robotDir);
+    	}
+	}
+	public static boolean needClean(int robotX, int robotY, int robotDir) {
+		int xx, yy;
+
+		//2번, 3번 조건 확인
+    	for(int k = 0; k < 4; k++) {
+    		xx = robotX + dx[k];
+    		yy = robotY + dy[k];
+    		
+    		if(room[yy][xx] == 0) {
+    			return true;
+    		}
+    	}
+    	return false;
+	}
 }
