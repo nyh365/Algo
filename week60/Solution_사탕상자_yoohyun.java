@@ -22,7 +22,7 @@ public class Main{
         	A = Integer.parseInt(st.nextToken());
         	B = Integer.parseInt(st.nextToken());
         	if(A == 1) {
-        		sb.append(getFlavor(tree, 1, 1, N, B, 0)).append("\n");
+        		sb.append(getFlavor(tree, 1, 1, MAX, B, 0)).append("\n");
         	} else {
         		C = Integer.parseInt(st.nextToken());
         	
