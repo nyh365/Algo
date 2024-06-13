@@ -9,6 +9,7 @@ public class Main{
 	static int[] dy = {0,0,1,-1};
 	static double[] dir = new double[4];
 	static boolean[][] visited = new boolean[30][30];
+	static double result;
 	public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -18,19 +19,27 @@ public class Main{
         for(int i = 0; i < 4; i++) {
         	dir[i] = Integer.parseInt(st.nextToken()) * 0.01;
         }
+
+        visited[15][15] = true;
+        solve(1, N, 15, 15);
         
-        System.out.print(solve(0, 0, N - 1, 15, 15));
+        System.out.print(result);
 	}
-	public static double solve(double total, int direction, int N, int x, int y) {
+	public static void solve(double total, int N, int x, int y) {
 		if(N == 0) {
-			return total;
+			result += total;
+			return;
 		}
 		
-		double result = 0;
+		int xx, yy;
 		for(int i = 0; i < 4; i++) {
-			result += solve(total * dir[i], i, N - 1, x, y);
+			xx = x + dx[i];
+			yy = y + dy[i];
+			
+			if(visited[yy][xx]) continue;
+			visited[yy][xx] = true;
+			solve(total * dir[i], N - 1, xx, yy);
+			visited[yy][xx] = false;
 		}
-		
-		return result;
 	}
 }
