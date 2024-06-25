@@ -11,8 +11,8 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());    
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());    
     
         map = new int[N][N];
         for(int i = 0; i < N; i++){
@@ -25,23 +25,21 @@ public class Main {
         int x, y;
         for(int i = 0; i < M; i++){
             st = new StringTokenizer(br.readLine());
-            y = Integer.parseInt(st.nextToken());
-            x = Integer.parseInt(st.nextToken());
+            y = Integer.parseInt(st.nextToken()) - 1;
+            x = Integer.parseInt(st.nextToken()) - 1;
         
             order.put(i, new int[]{x, y});
         }
+        map[order.get(0)[1]][order.get(0)[0]] = 1;
         dfs(0, order.get(0)[0], order.get(0)[1]);
         
         System.out.print(result);
     }
     public static void dfs(int curOrder, int curX, int curY){
-        if(curOrder == M + 1){
+        if(curOrder == M){
             ++result;
             return;
         }
-        
-        map[curY][curX] = -1;
-        
         if(curX == order.get(curOrder)[0] && curY == order.get(curOrder)[1]){
             dfs(curOrder + 1, curX, curY);
         } else {
@@ -51,12 +49,12 @@ public class Main {
                 yy = curY + dy[k];
     
                 if(xx < 0 || xx >= N || yy < 0 || yy >= N) continue;
-                if(map[yy][xx] == 1 || map[yy][xx] == -1) continue;
+                if(map[yy][xx] == 1) continue;
 
+                map[yy][xx] = 1;
                 dfs(curOrder, xx, yy);
-                
+                map[yy][xx] = 0;
             }            
         }
-        map[curY][curX] = 0;
     }
 }
