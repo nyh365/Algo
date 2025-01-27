@@ -77,14 +77,14 @@ public class Main {
 		int score = 0;
 		
 		for(int[] area : dangerousArea) {
-			if(area[0] <= x && area[1] <= y && x <= area[2] && y <= area[3]) {
+			if(Math.min(area[0], area[2]) <= x && Math.min(area[1], area[3]) <= y && x <= Math.max(area[0], area[2]) && y <= Math.max(area[1], area[3])) {
 				score = 1;
 				break;
 			}
 		}
 		
 		for(int[] area : deathArea) {
-			if(area[0] <= x && area[1] <= y && x <= area[2] && y <= area[3]) {
+			if(Math.min(area[0], area[2]) <= x && Math.min(area[1], area[3]) <= y && x <= Math.max(area[0], area[2]) && y <= Math.max(area[1], area[3])) {
 				score = -1;
 				break;
 			}
