@@ -25,73 +25,73 @@ public class Main {
 		}
 	}
 	public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        X = Integer.parseInt(st.nextToken());
-        Y = Integer.parseInt(st.nextToken());
-        
-        nodes = new Node[N];
-
-        for(int i = 0; i < M; i++) {
-        	st = new StringTokenizer(br.readLine());
-        	
-        	int from = Integer.parseInt(st.nextToken());
-        	int to = Integer.parseInt(st.nextToken());
-        	int weight = Integer.parseInt(st.nextToken());
-        	
-        	nodes[from] = new Node(to, weight, nodes[from]); 
-        	nodes[to] = new Node(from, weight, nodes[to]); 
-        }
-        
-        System.out.print(dijkstra());
-	}
+	        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	        StringTokenizer st = new StringTokenizer(br.readLine());
+	        
+	        N = Integer.parseInt(st.nextToken());
+	        M = Integer.parseInt(st.nextToken());
+	        X = Integer.parseInt(st.nextToken());
+	        Y = Integer.parseInt(st.nextToken());
+	        
+	        nodes = new Node[N];
 	
-	public static int dijkstra() {
-        int result = 0, cnt = 0;
-		boolean[] visited = new boolean[N];
-        int[] minValue = new int[N];
-        Arrays.fill(minValue, Integer.MAX_VALUE);
-        minValue[Y] = 0;
-        PriorityQueue<Node> pq = new PriorityQueue<>();
-        pq.add(new Node(Y, minValue[Y]));
-        
-        int totalDis = 0;
-        while(!pq.isEmpty() && cnt != N) {
-        	result++;
-        	
-        	Node cur;
-        	totalDis = 0;
-        	while(!pq.isEmpty()) {
-        		cur = pq.remove();
-        		
-        		if(visited[cur.vertex]) continue;
-        		if(totalDis + 2 * cur.weight > X) {
-        			if(totalDis != 0) {
-        				pq.add(cur);
-        			}
-        			
-        			break;
-        		}
-        		
-        		totalDis += 2 * cur.weight;
-        		visited[cur.vertex] = true;
-        		
-        		if(++cnt == N) break;
-        		
-        		for(Node tmp = nodes[cur.vertex]; tmp != null; tmp = tmp.next) {
-        			if(visited[tmp.vertex]) continue;
-        			if(minValue[cur.vertex] + tmp.weight >= minValue[tmp.vertex]) continue;
-        			
-        			minValue[tmp.vertex] = minValue[cur.vertex] + tmp.weight;
-        			
-        			pq.add(new Node(tmp.vertex, minValue[tmp.vertex]));
-        		}
-        	}
-        }
-        
-        return cnt != N ? -1 : result;
+	        for(int i = 0; i < M; i++) {
+	        	st = new StringTokenizer(br.readLine());
+	        	
+	        	int from = Integer.parseInt(st.nextToken());
+	        	int to = Integer.parseInt(st.nextToken());
+	        	int weight = Integer.parseInt(st.nextToken());
+	        	
+	        	nodes[from] = new Node(to, weight, nodes[from]); 
+	        	nodes[to] = new Node(from, weight, nodes[to]); 
+	        }
+	        
+	        System.out.print(dijkstra());
+		}
+		
+		public static int dijkstra() {
+	        int cnt = 0;
+			boolean[] visited = new boolean[N];
+	        int[] minValue = new int[N];
+	        Arrays.fill(minValue, Integer.MAX_VALUE);
+	        minValue[Y] = 0;
+	        PriorityQueue<Node> pq = new PriorityQueue<>();
+	        pq.add(new Node(Y, minValue[Y]));
+	        
+	        Node cur;
+	        while(!pq.isEmpty()) {
+	    		cur = pq.remove();
+	    		
+	    		if(visited[cur.vertex]) continue;
+	    		visited[cur.vertex] = true;
+	    		
+	    		if(++cnt == N) break;
+	    		
+	    		for(Node tmp = nodes[cur.vertex]; tmp != null; tmp = tmp.next) {
+	    			if(visited[tmp.vertex]) continue;
+	    			if(minValue[cur.vertex] + tmp.weight >= minValue[tmp.vertex]) continue;
+	    			
+	    			minValue[tmp.vertex] = minValue[cur.vertex] + tmp.weight;
+	    			
+	    			pq.add(new Node(tmp.vertex, minValue[tmp.vertex]));
+	    		}
+	    	}
+	        
+	        Arrays.sort(minValue);
+	        if(minValue[N - 1] > X) return -1;
+	
+	        int result = 0, totalDis = 0;
+	        for(int i = 0; i < N;) {
+	        	if(totalDis + 2 * minValue[i] > X) {
+	        		result++;
+	        		totalDis = 0;
+	        	} else {
+	        		if(i == N - 1) result++;
+	        		totalDis += 2 * minValue[i];
+	        		i++;
+	        	}
+	        }
+	        
+	        return result;
 	}
 }
