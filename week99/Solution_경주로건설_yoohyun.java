@@ -1,14 +1,14 @@
 import java.util.*;
 
 class Solution {
-    static int N, result;
-    static int[][] visited;
+    static int N, result = Integer.MAX_VALUE;
+    static int[][][] visited;
     static int[] dx = {0,0,-1,1};
     static int[] dy = {-1,1,0,0};
     
     public int solution(int[][] board) {
         N = board.length;
-        visited = new int[N][N];  
+        visited = new int[N][N][4];  
         
         bfs(board);
         
@@ -16,7 +16,7 @@ class Solution {
     }
     
     public void bfs(int[][] board) {
-        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> Integer.compare(a[1], b[1]));
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> Integer.compare(a[2], b[2]));
         pq.add(new int[] {0,0,0,-1});
         board[0][0] = 1;
         
@@ -36,8 +36,8 @@ class Solution {
 
                 if(xx < 0 || xx >= N || yy < 0 || yy >= N) continue;
                 if(board[yy][xx] == 1) continue;
-                if(visited[yy][xx] == 0 || visited[yy][xx] >= cur[2] + calCost(cur[3], k)) {
-                    visited[yy][xx] = cur[2] + calCost(cur[3], k);
+                if(visited[yy][xx][k] == 0 || visited[yy][xx][k] >= cur[2] + calCost(cur[3], k)){
+                    visited[yy][xx][k] = cur[2] + calCost(cur[3], k);
                     pq.add(new int[] {xx, yy, cur[2] + calCost(cur[3], k), k});
                 }
                 
