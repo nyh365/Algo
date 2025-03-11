@@ -1,4 +1,3 @@
-Add week100 Solution_n+1카드게임_yoohyun
 class Solution {
     static boolean[] myCards = new boolean[1001];
     static boolean[] pendingCards = new boolean[1001];
